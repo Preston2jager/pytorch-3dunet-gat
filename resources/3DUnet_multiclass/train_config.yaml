@@ -80,7 +80,7 @@ loaders:
   train:
     # paths to the training datasets
     file_paths:
-      - TRAIN_DIR
+      - "./Data"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
