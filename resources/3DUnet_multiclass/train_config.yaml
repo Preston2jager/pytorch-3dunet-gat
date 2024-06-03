@@ -5,9 +5,9 @@ model:
   # model class, e.g. UNet3D, ResidualUNet3D
   name: UNet3D
   # number of input channels to the model
-  in_channels: 1
+  in_channels: 6
   # number of classes
-  out_channels: 3
+  out_channels: 6
   # determines the order of operators in a single layer (gcr - GroupNorm+Conv3d+ReLU)
   layer_order: gcr
   # number of features at each level of the U-Net
@@ -67,7 +67,7 @@ loaders:
   # class of the HDF5 dataset, currently StandardHDF5Dataset and LazyHDF5Dataset are supported.
   dataset: StandardHDF5Dataset
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
-  batch_size: 1
+  batch_size: 4
   # how many subprocesses to use for data loading
   num_workers: 8
   # path to the raw data within the H5
@@ -80,13 +80,13 @@ loaders:
   train:
     # paths to the training datasets
     file_paths:
-      - "./Data"
+      - "./Data/Train"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [ 80, 170, 170 ]
+      patch_shape: [ 80, 80, 80 ]
       # train stride between patches
       stride_shape: [ 20, 40, 40 ]
       # minimum volume of the labels in the patch
@@ -131,15 +131,15 @@ loaders:
   val:
     # paths to the val datasets
     file_paths:
-      - VAL_DIR
+      - "./Data/Val"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [ 80, 170, 170 ]
+      patch_shape: [ 80, 80, 80 ]
       # train stride between patches
-      stride_shape: [ 80, 170, 170 ]
+      stride_shape: [ 20, 40, 40 ]
       # minimum volume of the labels in the patch
       threshold: 0.01
       # probability of accepting patches which do not fulfil the threshold criterion

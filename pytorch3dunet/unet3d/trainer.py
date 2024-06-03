@@ -177,6 +177,7 @@ class UNetTrainer:
 
             output, loss = self._forward_pass(input, target, weight)
 
+
             train_losses.update(loss.item(), self._batch_size(input))
 
             # compute gradients and update parameters
@@ -290,13 +291,14 @@ class UNetTrainer:
                 if torch.cuda.is_available():
                     input = input.cuda(non_blocking=True)
                 return input
-
+        
         t = _move_to_gpu(t)
         weight = None
         if len(t) == 2:
             input, target = t
         else:
             input, target, weight = t
+    
         return input, target, weight
 
     def _forward_pass(self, input, target, weight=None):
@@ -312,6 +314,9 @@ class UNetTrainer:
             output = self.model(input)
 
         # compute the loss
+        logger.info(f'{target.dtype}')
+        if target.dtype != torch.float:
+            target = target.float()
         if weight is None:
             loss = self.loss_criterion(output, target)
         else:

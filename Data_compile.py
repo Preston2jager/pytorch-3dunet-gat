@@ -2,20 +2,26 @@ import h5py
 import numpy as np
 from datetime import datetime
 
-# 获取当前日期和时间
+# Accquire data and time to create unique file name
 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-# 定义文件名，包括路径和时间戳
 filename = f'./Data/data_{current_time}.h5'
 
-# 创建 HDF5 文件
 with h5py.File(filename, 'w') as h5f:
-    # 假设你已经有了要保存的数据
+    #Get numpy
     raw_data = np.load('./Data/raw.npy')
+    #Mapping the last dimension to meet 3D Unet input requirement
+    raw_data_expanded = np.zeros((400, 400, 120, 6), dtype=int)
+    mapping = np.array([
+        [1, 0, 0, 0, 0, 0],  # This maps to [1, 0]
+        [0, 0, 0, 0, 0, 1]   # This maps to [0, 1]
+    ])
+    raw_data_expanded = mapping[raw_data[..., 1]]
+    # transpose to meet 3D Unet input requirement
+    raw_data_transposed = np.transpose(raw_data_expanded, (3, 0, 1, 2))
     label_data = np.load('./Data/label.npy')
+    label_data_transposed = np.transpose(label_data, (3, 0, 1, 2))
+    
+    h5f.create_dataset('raw', data=raw_data_transposed)
+    h5f.create_dataset('label', data=label_data_transposed)
 
-    # 创建数据组
-    h5f.create_dataset('raw', data=raw_data)
-    h5f.create_dataset('label', data=label_data)
-
-print(f"数据已经被保存为 HDF5 格式，文件名为：{filename}")
+print(f"Data has been created with HDF5 format as {filename}")
