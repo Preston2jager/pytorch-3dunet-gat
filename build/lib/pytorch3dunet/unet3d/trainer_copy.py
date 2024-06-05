@@ -146,17 +146,9 @@ class UNetTrainer:
                 self.checkpoint_dir = os.path.split(pre_trained)[0]
 
     def fit(self):
-                #Random data for test
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        graph_data = torch.randn((3, 4))
-        edge_index = torch.tensor([[0, 1],
-                           [1, 2]], dtype=torch.long)
-        graph_data = graph_data.to(device)
-        edge_index = edge_index.to(device)
-
         for _ in range(self.num_epochs, self.max_num_epochs):
             # train for one epoch
-            should_terminate = self.train(graph_data, edge_index)
+            should_terminate = self.train()
 
             if should_terminate:
                 logger.info('Stopping criterion is satisfied. Finishing training')
@@ -165,7 +157,7 @@ class UNetTrainer:
             self.num_epochs += 1
         logger.info(f"Reached maximum number of epochs: {self.max_num_epochs}. Finishing training...")
 
-    def train(self,graph_data, edge_index):
+    def train(self):
         """Trains the model for 1 epoch.
 
         Returns:
@@ -183,7 +175,8 @@ class UNetTrainer:
 
             input, target, weight = self._split_training_batch(t)
 
-            output, loss = self._forward_pass(input, target, graph_data, edge_index,weight)
+            output, loss = self._forward_pass(input, target, weight)
+
 
             train_losses.update(loss.item(), self._batch_size(input))
 
@@ -196,7 +189,7 @@ class UNetTrainer:
                 # set the model in eval mode
                 self.model.eval()
                 # evaluate on validation set
-                eval_score = self.validate(graph_data, edge_index)
+                eval_score = self.validate()
                 # set the model back to training mode
                 self.model.train()
 
@@ -261,7 +254,7 @@ class UNetTrainer:
 
         return False
 
-    def validate(self,graph_data, edge_index):
+    def validate(self):
         logger.info('Validating...')
 
         val_losses = utils.RunningAverage()
@@ -273,8 +266,7 @@ class UNetTrainer:
 
                 input, target, weight = self._split_training_batch(t)
 
-                output, loss = self._forward_pass(input, target, graph_data, edge_index, weight)
-
+                output, loss = self._forward_pass(input, target, weight)
                 val_losses.update(loss.item(), self._batch_size(input))
 
                 if i % 100 == 0:
@@ -309,8 +301,7 @@ class UNetTrainer:
     
         return input, target, weight
 
-    def _forward_pass(self, input, target, graph_data, edge_index, weight=None):
-        
+    def _forward_pass(self, input, target, weight=None):
         if isinstance(self.model, UNet2D):
             # remove the singleton z-dimension from the input
             input = torch.squeeze(input, dim=-3)
@@ -320,7 +311,7 @@ class UNetTrainer:
             output = torch.unsqueeze(output, dim=-3)
         else:
             # forward pass
-            output = self.model(input, graph_data, edge_index)
+            output = self.model(input)
 
         # compute the loss
         if target.dtype != torch.float:
