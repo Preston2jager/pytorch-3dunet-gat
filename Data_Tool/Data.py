@@ -20,7 +20,7 @@ def cli():
 def get_user_choice():
     choices = ['1', '2', '3', '4','5','6','7']  # 定义可用的选择
     prompt_text = (
-        "3D-U-Net-GAT data checker\n"
+        "3D-U-Net-GAT data handler\n"
         "Chooes your task:\n"
         "1: Display current graph\n"
         "2: Add a node\n"
