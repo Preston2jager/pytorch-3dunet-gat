@@ -1,17 +1,30 @@
 import streamlit as st
+import os
 from streamlit_modal import Modal
 
-def Display_graph(graph_data,edge_index):
-    modal = Modal(
-        "Demo Modal", 
-        key="demo-modal",
-        padding=20,    # default value
-        max_width=744  # default value
-    )
-        modal.open()
-    if modal.is_open():
-        with modal.container():
-            st.write(graph_data)
-            st.write(edge_index)
-            value = st.checkbox("Check me")
-            st.write(f"Checkbox checked: {value}")
+def Check_Data():
+    Points_status = True
+    Graph_status = False
+    return Points_status, Graph_status
+
+def Update():
+    r1,r2 = Check_Data()
+    if r1:
+        st.write("Point Data Ready")
+    else:
+        st.markdown(
+            '<p style="color:red;">Points Data Not Ready</p>',
+            unsafe_allow_html=True
+        )
+    if r2:
+        st.write("Graph Data ready")
+    else:
+        st.markdown(
+            '<p style="color:red;">Graph Data Not Ready</p>',
+            unsafe_allow_html=True
+        )
+
+def file_selector(folder_path='.'):
+    filenames = os.listdir(folder_path)
+    selected_filename = st.selectbox('选择一个文件', filenames)
+    return os.path.join(folder_path, selected_filename)
