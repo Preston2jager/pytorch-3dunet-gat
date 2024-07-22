@@ -1,22 +1,23 @@
 import torch
 import numpy as np
 import streamlit as st
-
+from Data_Utilities import *
 
 from Data_Handler import Page_Datahandler
-from Data_Points import Page_Datapoints
+
+Points_Dir = ""
 
 PAGES = {
-    "Data Handler": Page_Datahandler,
-    "Data Points": Page_Datapoints
+    "Data Handler": Page_Datahandler
 }
 
 st.title("3D-Unet-GAT Toolset")
 
 st.sidebar.title("Tool list:")
-selection = st.sidebar.radio("Tool list:", list(PAGES.keys()))
+selection = st.sidebar.radio("Proceed from top", list(PAGES.keys()))
 
 page = PAGES[selection]
 page()
 
-# 你可以在此处添加更多功能
+
+

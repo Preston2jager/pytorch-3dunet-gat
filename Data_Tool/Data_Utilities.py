@@ -1,23 +1,40 @@
 import streamlit as st
 import os
 from streamlit_modal import Modal
+from Global import *
 
-def Check_Data():
-    Points_status = True
-    Graph_status = False
-    return Points_status, Graph_status
+def Check_Points(Points_Dir):
+    if Points_Dir is not "":
+        Points_status = True
+    else:
+        Points_status = False
+    return Points_status
 
-def Update():
-    r1,r2 = Check_Data()
-    if r1:
-        st.write("Point Data Ready")
+def Check_Graph():
+    Graph_status = True
+    return Graph_status
+
+def Update_Points():
+    global Points_Dir
+    r = Check_Points(Points_Dir)
+    if r:
+        st.markdown(
+            '<p style="color:green;">Point Data Ready</p>',
+            unsafe_allow_html=True
+        )
     else:
         st.markdown(
             '<p style="color:red;">Points Data Not Ready</p>',
             unsafe_allow_html=True
         )
-    if r2:
-        st.write("Graph Data ready")
+    
+def Update_Graph():
+    r = Check_Graph()
+    if r:
+        st.markdown(
+            '<p style="color:green;">Graph Data Ready</p>',
+            unsafe_allow_html=True
+        )
     else:
         st.markdown(
             '<p style="color:red;">Graph Data Not Ready</p>',
