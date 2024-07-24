@@ -2,12 +2,14 @@ from vispy import app, visuals, scene
 import numpy as np
 import argparse 
 
+#=================================
+#Loading data file
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=str, help='file to load')
 args = parser.parse_args()
-
 array = np.load(args.file)
 
+#=================================
 Scatter3D = scene.visuals.create_visual_node(visuals.MarkersVisual)
 canvas = scene.SceneCanvas(keys="interactive", show=True)
 view = canvas.central_widget.add_view()
@@ -15,6 +17,7 @@ view.camera = "turntable"
 view.camera.fov = 45
 view.camera.distance = 500
 
+#=================================
 x1, y1, z1 = np.where((array == [0, 1]).all(axis=-1))
 points_obj = np.vstack((x1, y1, z1)).T
 
