@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from streamlit_modal import Modal
-from Global import *
+from Utilities.Global import *
 
 def Check_Points(Points_Dir):
     if Points_Dir is not "":

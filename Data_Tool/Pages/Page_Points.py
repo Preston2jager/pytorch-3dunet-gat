@@ -1,8 +1,8 @@
 import streamlit as st
 import tempfile
 import subprocess
-from Data_Utilities import *
-from Global import *
+from Utilities.Data_Utilities import *
+from Utilities.Global import *
 
 def Page_DataPoints():
     st.title("Point Data ")

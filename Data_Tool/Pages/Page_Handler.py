@@ -1,7 +1,7 @@
 import streamlit as st
-from Page_Points import Page_DataPoints
-from Page_Graph import Page_DataGraph
-from Data_Tool.Utilities.Data_Utilities import *
+from Pages.Page_Points import Page_DataPoints
+from Pages.Page_Graph import Page_DataGraph
+from Utilities.Data_Utilities import *
 
 def Page_Datahandler():
     st.title("Data Handler")

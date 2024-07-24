@@ -1,17 +1,14 @@
 import torch
 import numpy as np
 import streamlit as st
-from Data_Utilities import *
+from Utilities.Data_Utilities import *
 
-from Data_Handler import Page_Datahandler
-from Page_Howto import Page_Howto
-
-Points_Dir = ""
+from Pages.Page_Handler import Page_Datahandler
+from Pages.Page_Howto import Page_Howto
 
 PAGES = {
     "Introduction": Page_Howto,
     "Data Handler": Page_Datahandler
-    
 }
 
 st.sidebar.title("3D-Unet-GAT Toolset")
