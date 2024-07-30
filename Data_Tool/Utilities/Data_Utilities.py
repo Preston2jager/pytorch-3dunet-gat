@@ -4,7 +4,7 @@ from streamlit_modal import Modal
 from Utilities.Global import *
 
 def Check_Points(Points_Dir):
-    if Points_Dir is not "":
+    if Points_Dir != "":
         Points_status = True
     else:
         Points_status = False
@@ -45,3 +45,13 @@ def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
     selected_filename = st.selectbox('选择一个文件', filenames)
     return os.path.join(folder_path, selected_filename)
+
+def Data_Evaluation(valid_percentage):
+    if valid_percentage > 50:
+        return "Great data"
+    elif valid_percentage > 30:
+        return "OK data"
+    elif valid_percentage >10:
+        return "Not Ideal"
+    else:
+        return "Bad data"
