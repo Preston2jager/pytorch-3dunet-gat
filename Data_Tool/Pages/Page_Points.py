@@ -1,6 +1,5 @@
+import tempfile,h5py,subprocess
 import streamlit as st
-import tempfile
-import subprocess
 import numpy as np
 from Utilities.Data_Utilities import *
 from Utilities.Global import *
@@ -28,9 +27,23 @@ def Page_DataPoints():
             st.write('Valid Data: ', Total_points-invalid_count)
             st.write('Occupancy: {:.2f}%'.format(valid_percentage))
             st.write(Evas)
-            
-
+        
         if st.button('Render'):
             subprocess.run(['python', './Data_Render.py', '--file', Points_Dir], check=True)
+
+        if st.button('Save as H5 file'):
+            with h5py.File(hdf5_filename, 'w') as h5f:
+                raw_data = np.load('./Data/raw.npy')
+                raw_data_expanded = np.zeros((400, 400, 120, 6), dtype=int)
+                mapping = np.array([
+                    [1, 0, 0, 0, 0, 0],  # This maps to [1, 0]
+                    [0, 0, 0, 0, 0, 1]   # This maps to [0, 1]
+                ])
+                raw_data_expanded = mapping[raw_data[..., 1]]
+                raw_data_transposed = np.transpose(raw_data_expanded, (3, 0, 1, 2))
+                label_data = np.load('./Data/label.npy')
+                label_data_transposed = np.transpose(label_data, (3, 0, 1, 2))
+                h5f.create_dataset('raw', data=raw_data_transposed)
+                h5f.create_dataset('label', data=label_data_transposed)
     
     

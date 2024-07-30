@@ -3,12 +3,13 @@ import numpy as np
 import streamlit as st
 from Utilities.Data_Utilities import *
 
-from Pages.Page_Handler import Page_Datahandler
 from Pages.Page_Howto import Page_Howto
+from Pages.Page_Handler import Page_Datahandler
+
 
 PAGES = {
-    "Introduction": Page_Howto,
-    "Data Handler": Page_Datahandler
+    "Introduction":Page_Howto,
+    "Data Handler":Page_Datahandler
 }
 
 st.sidebar.title("3D-Unet-GAT Toolset")
