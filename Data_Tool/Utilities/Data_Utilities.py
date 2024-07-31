@@ -2,6 +2,8 @@ import streamlit as st
 import os
 from streamlit_modal import Modal
 from Utilities.Global import *
+import hashlib
+from datetime import datetime
 
 def Check_Points(Points_Dir):
     if Points_Dir != "":
@@ -55,3 +57,9 @@ def Data_Evaluation(valid_percentage):
         return "Not Ideal"
     else:
         return "Bad data"
+    
+def generate_hashed_timestamp():
+    timestamp = datetime.now().isoformat()
+    hash_object = hashlib.sha256(timestamp.encode())
+    short_identifier = hash_object.hexdigest()[:8]
+    return short_identifier

@@ -32,18 +32,22 @@ def Page_DataPoints():
             subprocess.run(['python', './Data_Render.py', '--file', Points_Dir], check=True)
 
         if st.button('Save as H5 file'):
+            identifier = generate_hashed_timestamp()
+            hdf5_filename = f'../Data/Train/data_{identifier}.h5'
             with h5py.File(hdf5_filename, 'w') as h5f:
-                raw_data = np.load('./Data/raw.npy')
-                raw_data_expanded = np.zeros((400, 400, 120, 6), dtype=int)
-                mapping = np.array([
-                    [1, 0, 0, 0, 0, 0],  # This maps to [1, 0]
-                    [0, 0, 0, 0, 0, 1]   # This maps to [0, 1]
-                ])
-                raw_data_expanded = mapping[raw_data[..., 1]]
-                raw_data_transposed = np.transpose(raw_data_expanded, (3, 0, 1, 2))
-                label_data = np.load('./Data/label.npy')
+                raw_data = np.load(Points_Dir)
+                x, y, z, _ = raw_data.shape
+                label_data = np.zeros((x,y,z,2), dtype=int)
+                for i in range(x):
+                    for j in range(y):
+                        for k in range(z):
+                            if raw_data[i, j, k, 0] == 1:
+                                label_data[i, j, k] = [1, 0]
+                            else:
+                                label_data[i, j, k] = [0, 1]
+                raw_data_transposed = np.transpose(raw_data, (3, 0, 1, 2))
                 label_data_transposed = np.transpose(label_data, (3, 0, 1, 2))
                 h5f.create_dataset('raw', data=raw_data_transposed)
                 h5f.create_dataset('label', data=label_data_transposed)
-    
+            st.success('File saved successfully! ✅') 
     

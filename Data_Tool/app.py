@@ -4,7 +4,7 @@ import streamlit as st
 from Utilities.Data_Utilities import *
 
 from Pages.Page_Howto import Page_Howto
-from Pages.Page_Handler import Page_Datahandler
+from Pages.Data_Handler import Page_Datahandler
 
 
 PAGES = {
