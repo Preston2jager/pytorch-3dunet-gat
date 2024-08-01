@@ -32,6 +32,8 @@ def Page_Datahandler():
                 subprocess.run(['python', './Data_Render.py', '--file', Points_Dir], check=True)
             if st.button('Save as H5 file'):
                 identifier = generate_hashed_timestamp()
+                if 'identifier' not in st.session_state:
+                    st.session_state.identifier = identifier
                 hdf5_filename = f'../Data/Train/data_{identifier}.h5'
                 with h5py.File(hdf5_filename, 'w') as h5f:
                     raw_data = np.load(Points_Dir)
@@ -51,26 +53,51 @@ def Page_Datahandler():
                     st.success('Point data file saved successfully! ✅')
     with container2:
         st.title("Step 2: Graph Data ")
+        st.write("""
+        Input your graph data below. Each line represents a node or an edge.
+        - For nodes with parameters, input the node name followed by key-value pairs (e.g., `A color red size 10`).
+        - For edges, input the node names separated by a space (e.g., `A B`).\\
+        A Name 1 Size 22\\
+        B Name 2 Size 10\\
+        C Name 3 Size 5\\
+        D Name 4 Size 8.\\
+        E Name 5 Size 8\\
+        A B\\
+        A C\\
+        A D\\
+        A E\\
+        E D
+        """)
+        input_text = st.text_area("Input Graph Data", height=200)
 
-        if 'data_array' not in st.session_state or st.session_state.data_array.size == 0:
-            st.session_state.data_array = np.empty((0, 5))
-
-        keys = ["Name", "Size", "Property 1", "Property 2", "Property 3"]
-        input_data = []
-
-        for i, key in enumerate(keys):
-            value = st.text_input(f"{key}", key=f'Value{i}')  # 使用预定义的键名作为标签
-            input_data.append((key, value))
-                
-        if st.button('Add to Array'):
-            new_entry = np.array([input_data])  
-            st.session_state.data_array = np.vstack([st.session_state.data_array, new_entry])
-            st.success("Data added to array successfully!")
-
-        if st.button("Show warning"):
-            st.success(st.write(st.session_state.data_array))
-
+        if st.button("Create Graph"):
+            if input_text:
+                G = create_graph_from_text(input_text)
+                node_colors = {node: get_random_color() for node in G.nodes()}
+                node_size = 300
+                fig, ax = plt.subplots()
+                pos = nx.spring_layout(G)
+                nx.draw(G, pos, with_labels=False, node_color=[node_colors[node] for node in G.nodes()], node_size=node_size, edge_color='gray', ax=ax)
+                labels = {node: f"{node}\n" + "\n".join([f"{k}: {v}" for k, v in data.items()]) for node, data in G.nodes(data=True)}
+                nx.draw_networkx_labels(G, pos, labels=labels, font_size=10)
+                st.pyplot(fig)
+            else:
+                st.error("Please input graph data.")
         
+        if st.button("Save Graph"):
+            if input_text:
+                G = create_graph_from_text(input_text)
+                nodes, edges = graph_to_tensors(G)
+                if 'identifier' in st.session_state:
+                    identifier = st.session_state.identifier
+                    nodes_filename = f'../Data/Train/nodes_{identifier}.pt'
+                    edges_filename = f'../Data/Train/edges_{identifier}.pt'
+                    torch.save(nodes, nodes_filename)
+                    torch.save(edges, edges_filename)
+                    st.success("graph data saved")
+                else:
+                    st.write("Identifier not found.")
+
 
 
        
