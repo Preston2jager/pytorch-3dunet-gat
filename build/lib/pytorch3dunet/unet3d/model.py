@@ -12,7 +12,7 @@ class AbstractUNet(nn.Module):
 
     def __init__(self, in_channels, out_channels, final_sigmoid, basic_module, f_maps=64, layer_order='gcr',
                  num_groups=8, num_levels=4, is_segmentation=True, conv_kernel_size=3, pool_kernel_size=2,
-                 conv_padding=1, conv_upscale=2, upsample='default', dropout_prob=0.1, is3d=True, gat_in_features =4 , gat_out_features = 16, gat_layers = 3, gat_heads_per_layer = [4,4,4]):
+                 conv_padding=1, conv_upscale=2, upsample='default', dropout_prob=0.1, is3d=True, gat_in_features = 2 , gat_out_features = 16, gat_layers = 3, gat_heads_per_layer = [4,4,4]):
         super(AbstractUNet, self).__init__()
 
         if isinstance(f_maps, int):
@@ -65,7 +65,7 @@ class AbstractUNet(nn.Module):
         expanded_gat_output_mean = gat_output_mean.view(1, 256, 1, 1, 1).expand_as(x)
 
         x = x + expanded_gat_output_mean  # Element-wise addition of features
-        
+
         #########
 
         for decoder, encoder_features in zip(self.decoders, encoders_features):

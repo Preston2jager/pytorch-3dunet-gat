@@ -5,6 +5,8 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
+from Data_Tool.Utilities.Data_meta import Data_meta
+
 from pytorch3dunet.datasets.utils import get_train_loaders
 from pytorch3dunet.unet3d.losses import get_loss_criterion
 from pytorch3dunet.unet3d.metrics import get_evaluation_metric
@@ -146,17 +148,24 @@ class UNetTrainer:
                 self.checkpoint_dir = os.path.split(pre_trained)[0]
 
     def fit(self):
-                #Random data for test
+
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        graph_data = torch.randn((3, 4))
-        edge_index = torch.tensor([[0, 1],
-                           [1, 2]], dtype=torch.long)
-        graph_data = graph_data.to(device)
-        edge_index = edge_index.to(device)
+
+        nodes_file_path = os.path.join("../Data/Train/", f"nodes.pt")
+        edges_file_path = os.path.join("../Data/Train/", f"edges.pt")
+
+        nodes_data = torch.load(nodes_file_path)
+        edges_data = torch.load(edges_file_path)
+
+        print(nodes_data)
+        print(edges_data)
+
+        nodes_data = nodes_data.to(device)
+        edges_data = edges_data.to(device)
 
         for _ in range(self.num_epochs, self.max_num_epochs):
             # train for one epoch
-            should_terminate = self.train(graph_data, edge_index)
+            should_terminate = self.train(nodes_data, edges_data)
 
             if should_terminate:
                 logger.info('Stopping criterion is satisfied. Finishing training')
@@ -321,6 +330,7 @@ class UNetTrainer:
         else:
             # forward pass
             output = self.model(input, graph_data, edge_index)
+            print(output.shape)
 
         # compute the loss
         if target.dtype != torch.float:

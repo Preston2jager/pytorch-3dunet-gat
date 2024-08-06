@@ -5,9 +5,9 @@ model:
   # model class, e.g. UNet3D, ResidualUNet3D
   name: UNet3D
   # number of input channels to the model
-  in_channels: 6
+  in_channels: 2
   # number of classes
-  out_channels: 6
+  out_channels: 7
   # determines the order of operators in a single layer (gcr - GroupNorm+Conv3d+ReLU)
   layer_order: gcr
   # number of features at each level of the U-Net
@@ -80,7 +80,7 @@ loaders:
   train:
     # paths to the training datasets
     file_paths:
-      - "./Data/Train"
+      - "../Data/Train"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -131,7 +131,7 @@ loaders:
   val:
     # paths to the val datasets
     file_paths:
-      - "./Data/Val"
+      - "../Data/Val"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
