@@ -34,7 +34,7 @@ trainer:
   # max number of epochs
   max_num_epochs: 200
   # max number of iterations
-  max_num_iterations: 12000
+  max_num_iterations: 30000
   # model with higher eval score is considered better
   eval_score_higher_is_better: True
 # loss function configuration

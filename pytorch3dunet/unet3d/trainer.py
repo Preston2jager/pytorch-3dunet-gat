@@ -331,7 +331,6 @@ class UNetTrainer:
         else:
             # forward pass
             output = self.model(input, graph_data, edge_index)
-            print(output.shape)
 
         # compute the loss
         if target.dtype != torch.float:
