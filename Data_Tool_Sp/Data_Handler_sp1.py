@@ -42,10 +42,14 @@ for i in range(x):
 raw_data_transposed = np.transpose(raw_data, (3, 0, 1, 2))
 
 
-def data_creation(file_name, transposed_data,raw_data_transposed):
+def data_creation(file_name, raw_data_transposed):
     with h5py.File(file_name, 'w') as h5f:
         h5f.create_dataset('raw', data=raw_data_transposed)
-        h5f.create_dataset('label', data=transposed_data)
+        #h5f.create_dataset('label', data=transposed_data)
+#def data_creation(file_name, transposed_data,raw_data_transposed):
+    #with h5py.File(file_name, 'w') as h5f:
+        #h5f.create_dataset('raw', data=raw_data_transposed)
+        #h5f.create_dataset('label', data=transposed_data)
 
 #data_creation(hdf5_filename_1, label_1_data_transposed, raw_data_transposed)
 #data_creation(hdf5_filename_2, label_2_data_transposed, raw_data_transposed)
