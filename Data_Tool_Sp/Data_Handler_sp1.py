@@ -22,6 +22,7 @@ hdf5_filename_1 = f'../Data/Train_1/data_fc96fe87.h5'
 hdf5_filename_2 = f'../Data/Train_2/data_b04c7fdf.h5'
 hdf5_filename_3 = f'../Data/Train_3/data_2eb898ba.h5'
 hdf5_filename_val = f'../Data/Train_val/data_bdc8ddb1.h5'
+hdf5_filename_pre = f'../Data/Train_pre/data_bdc8ddb1.h5'
 
 label_1_data_transposed = transposed_data_list[0]
 label_2_data_transposed = transposed_data_list[1]
@@ -41,15 +42,20 @@ for i in range(x):
 raw_data_transposed = np.transpose(raw_data, (3, 0, 1, 2))
 
 
-def data_creation(file_name, transposed_data,raw_data_transposed):
+def data_creation(file_name, raw_data_transposed):
     with h5py.File(file_name, 'w') as h5f:
         h5f.create_dataset('raw', data=raw_data_transposed)
-        h5f.create_dataset('label', data=transposed_data)
+        #h5f.create_dataset('label', data=transposed_data)
+#def data_creation(file_name, transposed_data,raw_data_transposed):
+    #with h5py.File(file_name, 'w') as h5f:
+        #h5f.create_dataset('raw', data=raw_data_transposed)
+        #h5f.create_dataset('label', data=transposed_data)
 
-data_creation(hdf5_filename_1, label_1_data_transposed, raw_data_transposed)
-data_creation(hdf5_filename_2, label_2_data_transposed, raw_data_transposed)
-data_creation(hdf5_filename_3, label_3_data_transposed, raw_data_transposed)
-data_creation(hdf5_filename_val, val_data_transposed, raw_data_transposed)
+#data_creation(hdf5_filename_1, label_1_data_transposed, raw_data_transposed)
+#data_creation(hdf5_filename_2, label_2_data_transposed, raw_data_transposed)
+#data_creation(hdf5_filename_3, label_3_data_transposed, raw_data_transposed)
+#data_creation(hdf5_filename_val, val_data_transposed, raw_data_transposed)
+data_creation(hdf5_filename_pre, val_data_transposed)
 
 
 
