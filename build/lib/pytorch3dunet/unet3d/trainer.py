@@ -24,8 +24,7 @@ def create_trainer(config):
 
     if torch.cuda.device_count() > 1 and not config['device'] == 'cpu':
         model = nn.DataParallel(model)
-        #model = model.cuda()
-        logger.info(f'Using {torch.cuda.device_count()} GPUs for prediction')
+        logger.info(f'Using {torch.cuda.device_count()} GPUs with DataParallel')
     if torch.cuda.is_available() and not config['device'] == 'cpu':
         model = model.cuda()
 
@@ -152,8 +151,8 @@ class UNetTrainer:
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        nodes_file_path = os.path.join("../Data/Train/", f"nodes.pt")
-        edges_file_path = os.path.join("../Data/Train/", f"edges.pt")
+        nodes_file_path = os.path.join("../Data/Train_3/", f"nodes.pt")
+        edges_file_path = os.path.join("../Data/Train_3/", f"edges.pt")
 
         nodes_data = torch.load(nodes_file_path)
         edges_data = torch.load(edges_file_path)
@@ -330,6 +329,7 @@ class UNetTrainer:
             output = torch.unsqueeze(output, dim=-3)
         else:
             # forward pass
+            edge_index = edge_index.to('cuda')
             output = self.model(input, graph_data, edge_index)
 
         # compute the loss

@@ -1,6 +1,6 @@
 import random,os
 
-import torch
+import torch,os
 
 from pytorch3dunet.unet3d.config import load_config, copy_config
 from pytorch3dunet.unet3d.trainer import create_trainer
@@ -8,7 +8,6 @@ from pytorch3dunet.unet3d.utils import get_logger
 
 logger = get_logger('TrainingSetup')
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "6"
 
 def main():
     # Load and log experiment configuration
