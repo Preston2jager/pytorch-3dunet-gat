@@ -5,9 +5,6 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
-import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
-
 from Data_Tool.Utilities.Data_meta import Data_meta
 
 from pytorch3dunet.datasets.utils import get_train_loaders
@@ -25,23 +22,11 @@ def create_trainer(config):
     # Create the model
     model = get_model(config['model'])
 
-    if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
-        dist.init_process_group(backend='nccl', init_method='env://')
-        rank = int(os.environ['RANK'])
-        torch.cuda.set_device(rank)
-        model = model.cuda(rank)
-        model = DDP(model, device_ids=[rank])
-        logger.info(f'Using DistributedDataParallel with {torch.cuda.device_count()} GPUs')
-    else:
-        if torch.cuda.device_count() > 1 and not config['device'] == 'cpu':
-            dist.init_process_group(backend='nccl', init_method='env://')
-            rank = int(os.environ['RANK'])
-            torch.cuda.set_device(rank)
-            model = model.cuda(rank)
-            model = DDP(model, device_ids=[rank])
-            logger.info(f'Using {torch.cuda.device_count()} GPUs with DataParallel')
-        if torch.cuda.is_available() and not config['device'] == 'cpu':
-            model = model.cuda()
+    if torch.cuda.device_count() > 1 and not config['device'] == 'cpu':
+        model = nn.DataParallel(model)
+        logger.info(f'Using {torch.cuda.device_count()} GPUs with DataParallel')
+    if torch.cuda.is_available() and not config['device'] == 'cpu':
+        model = model.cuda()
 
     # Log the number of learnable parameters
     logger.info(f'Number of learnable params {get_number_of_learnable_parameters(model)}')
@@ -166,8 +151,8 @@ class UNetTrainer:
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        nodes_file_path = os.path.join("../Data/Train/", f"nodes.pt")
-        edges_file_path = os.path.join("../Data/Train/", f"edges.pt")
+        nodes_file_path = os.path.join("../Data/Train_4/", f"nodes.pt")
+        edges_file_path = os.path.join("../Data/Train_4/", f"edges.pt")
 
         nodes_data = torch.load(nodes_file_path)
         edges_data = torch.load(edges_file_path)

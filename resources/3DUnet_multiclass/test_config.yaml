@@ -1,13 +1,13 @@
 # path to the checkpoint file containing the model
-model_path: PATH_TO_BEST_CHECKPOINT
+model_path: ../CHECKPOINT_DIR/best_checkpoint.pytorch
 # model configuration
 model:
   # model class
   name: UNet3D
   # number of input channels to the model
-  in_channels: 1
+  in_channels: 2
   # number of classes
-  out_channels: 3
+  out_channels: 7
   # determines the order of operators in a single layer (gcr - GroupNorm+Conv3d+ReLU)
   layer_order: gcr
   # feature maps scale factor
@@ -37,16 +37,16 @@ loaders:
     # paths to the test datasets; if a given path is a directory all H5 files ('*.h5', '*.hdf', '*.hdf5', '*.hd5')
     # inside this directory will be included as well (non-recursively)
     file_paths:
-      - TEST_DIR
+      - ../Data/Train_pre/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       # SliceBuilder class
       name: SliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [ 80, 170, 170 ]
+      patch_shape: [ 100, 100, 100 ]
       # train stride between patches
-      stride_shape: [ 80, 170, 170 ]
+      stride_shape: [ 20, 20, 20 ]
       # halo around each patch
       halo_shape: [ 16, 32, 32 ]
 

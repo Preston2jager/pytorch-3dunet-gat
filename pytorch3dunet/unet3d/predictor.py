@@ -96,6 +96,20 @@ class StandardPredictor(_AbstractPredictor):
         else:
             prediction_maps_shape = (self.out_channels,) + volume_shape
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        nodes_file_path = os.path.join("../Data/Train_3/", f"nodes.pt")
+        edges_file_path = os.path.join("../Data/Train_3/", f"edges.pt")
+
+        nodes_data = torch.load(nodes_file_path)
+        edges_data = torch.load(edges_file_path)
+
+        print(nodes_data)
+        print(edges_data)
+
+        nodes_data = nodes_data.to(device)
+        edges_data = edges_data.to(device)
+
         # create destination H5 file
         output_file = _get_output_file(dataset=test_loader.dataset, output_dir=self.output_dir)
         with h5py.File(output_file, 'w') as h5_output_file:
@@ -125,7 +139,7 @@ class StandardPredictor(_AbstractPredictor):
                         prediction = torch.unsqueeze(prediction, dim=-3)
                     else:
                         # forward pass
-                        prediction = self.model(input)
+                        prediction = self.model(input,nodes_data,edges_data)
 
                     # unpad the predicted patch
                     prediction = remove_padding(prediction, patch_halo)

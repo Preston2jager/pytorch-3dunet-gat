@@ -32,9 +32,9 @@ trainer:
   # how many iterations between tensorboard logging
   log_after_iters: 500
   # max number of epochs
-  max_num_epochs: 200
+  max_num_epochs: 600
   # max number of iterations
-  max_num_iterations: 30000
+  max_num_iterations: 60000
   # model with higher eval score is considered better
   eval_score_higher_is_better: True
 # loss function configuration
@@ -80,7 +80,7 @@ loaders:
   train:
     # paths to the training datasets
     file_paths:
-      - "../Data/Train"
+      - "../Data/Train_4"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -131,7 +131,7 @@ loaders:
   val:
     # paths to the val datasets
     file_paths:
-      - "../Data/Val"
+      - "../Data/Val_4"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
