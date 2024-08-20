@@ -37,7 +37,7 @@ loaders:
     # paths to the test datasets; if a given path is a directory all H5 files ('*.h5', '*.hdf', '*.hdf5', '*.hd5')
     # inside this directory will be included as well (non-recursively)
     file_paths:
-      - ../Data/Train_pre/
+      - ../Data/Pre_2/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:

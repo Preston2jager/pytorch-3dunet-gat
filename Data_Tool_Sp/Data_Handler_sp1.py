@@ -55,7 +55,7 @@ def data_creation(file_name, raw_data_transposed):
 #data_creation(hdf5_filename_2, label_2_data_transposed, raw_data_transposed)
 #data_creation(hdf5_filename_3, label_3_data_transposed, raw_data_transposed)
 #data_creation(hdf5_filename_val, val_data_transposed, raw_data_transposed)
-data_creation(hdf5_filename_pre, val_data_transposed)
+data_creation(hdf5_filename_pre, raw_data_transposed)
 
 
 
