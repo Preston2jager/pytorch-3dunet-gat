@@ -151,8 +151,8 @@ class UNetTrainer:
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        nodes_file_path = os.path.join("../Data/Train_4/", f"nodes.pt")
-        edges_file_path = os.path.join("../Data/Train_4/", f"edges.pt")
+        nodes_file_path = os.path.join("../Data/Train/", f"nodes.pt")
+        edges_file_path = os.path.join("../Data/Train/", f"edges.pt")
 
         nodes_data = torch.load(nodes_file_path)
         edges_data = torch.load(edges_file_path)

@@ -64,6 +64,13 @@ class AbstractUNet(nn.Module):
         gat_output_mean = torch.mean(gat_features, dim=0)
         expanded_gat_output_mean = gat_output_mean.view(1, 256, 1, 1, 1).expand_as(x)
 
+        x_before = x.clone()
+        x_after = expanded_gat_output_mean
+        relative_change = (x_after / x_before) * 100
+        print("=============================")
+        for value in relative_change.flatten():
+            print(f"{value:.2f}%")
+        
         x = x + expanded_gat_output_mean  # Element-wise addition of features
 
         #########
