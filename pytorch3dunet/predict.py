@@ -9,6 +9,7 @@ from pytorch3dunet.unet3d import utils
 from pytorch3dunet.unet3d.config import load_config
 from pytorch3dunet.unet3d.model import get_model
 
+### For Multi-GPU setup
 logger = utils.get_logger('UNet3DPredict')
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
