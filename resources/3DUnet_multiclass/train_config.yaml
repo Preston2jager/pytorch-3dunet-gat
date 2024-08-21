@@ -21,7 +21,7 @@ model:
 # trainer configuration
 trainer:
   # path to the checkpoint directory
-  checkpoint_dir: ../CHECKPOINT_DIR_2
+  checkpoint_dir: ./CHECKPOINT_DIR_2
   # path to the latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -80,7 +80,7 @@ loaders:
   train:
     # paths to the training datasets
     file_paths:
-      - "../Data/Train"
+      - "./Data/Train"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -131,7 +131,7 @@ loaders:
   val:
     # paths to the val datasets
     file_paths:
-      - "../Data/Val"
+      - "./Data/Val"
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
