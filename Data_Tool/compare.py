@@ -4,7 +4,7 @@ import h5py
 #=================================
 #Loading data file
 file_path_1 = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_1.h5'
-file_path_2 = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_2.h5'
+file_path_2 = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_3.h5'
 
 with h5py.File(file_path_1, 'r') as h5_file_1:
     array_1 = h5_file_1['predictions'][:]
