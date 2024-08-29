@@ -61,8 +61,8 @@ class AbstractUNet(nn.Module):
         #GAT integration
 
         gat_features = self.gat_module(graph_data, edge_index)
-        gat_output_mean = torch.mean(gat_features, dim=0)
-        expanded_gat_output_mean = gat_output_mean.view(1, 256, 1, 1, 1).expand_as(x)
+        scaled_gat_features = gat_features * 10
+        expanded_gat_output_mean = scaled_gat_features.view(1, 256, 1, 1, 1).expand_as(x)
 
         x_before = x.clone()
         x_after = expanded_gat_output_mean
