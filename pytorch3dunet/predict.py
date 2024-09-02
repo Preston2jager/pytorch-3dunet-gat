@@ -8,6 +8,7 @@ from pytorch3dunet.datasets.utils import get_test_loaders
 from pytorch3dunet.unet3d import utils
 from pytorch3dunet.unet3d.config import load_config
 from pytorch3dunet.unet3d.model import get_model
+from pytorch3dunet.unet3d.utils import get_graph
 
 ### For Multi-GPU setup
 logger = utils.get_logger('UNet3DPredict')
@@ -51,10 +52,13 @@ def main():
 
     # create predictor instance
     predictor = get_predictor(model, config)
+    nodes_data, edges_data = get_graph(config)
+    print(nodes_data)
+    print(edges_data)
 
     for test_loader in get_test_loaders(config):
         # run the model prediction on the test_loader and save the results in the output_dir
-        predictor(test_loader)
+        predictor(test_loader,nodes_data,edges_data)
 
 
 if __name__ == '__main__':

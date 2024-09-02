@@ -241,8 +241,9 @@ class UNetTrainer:
 
             if self.should_stop():
                 return True
-
+        
             self.num_iterations += 1
+
 
         return False
 
