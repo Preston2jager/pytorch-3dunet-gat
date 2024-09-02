@@ -5,8 +5,8 @@ import h5py
 
 #=================================
 #Loading data file
-#file_path = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_1.h5'
-file_path = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_3.h5'
+file_path = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_33.h5'
+#file_path = 'C:/Users/prest/Downloads/predictions/data_bdc8ddb1_predictions_22.h5'
 
 with h5py.File(file_path, 'r') as h5_file:
     array = h5_file['predictions'][:]
