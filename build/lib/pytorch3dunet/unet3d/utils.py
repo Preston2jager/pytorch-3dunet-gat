@@ -364,3 +364,26 @@ def get_class(class_name, modules):
         if clazz is not None:
             return clazz
     raise RuntimeError(f'Unsupported dataset class: {class_name}')
+
+def get_graph(config):
+    try:
+        file_paths = config['loaders']['train']['file_paths']
+    except KeyError:
+        file_paths = []
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if file_paths:
+        # 构建 nodes 和 edges 的文件路径
+        nodes_file_path = os.path.join(file_paths[0], "nodes.pt")
+        edges_file_path = os.path.join(file_paths[0], "edges.pt")
+        # 加载数据
+        nodes_data = torch.load(nodes_file_path)
+        edges_data = torch.load(edges_file_path)
+        # 将数据移动到指定设备
+        nodes_data = nodes_data.to(device)
+        edges_data = edges_data.to(device)
+
+        # 返回加载的数据
+        return nodes_data, edges_data
+    else:
+        print("No file paths found in the configuration.")
+        return None, None

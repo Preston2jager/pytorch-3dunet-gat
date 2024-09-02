@@ -11,7 +11,7 @@ from pytorch3dunet.datasets.utils import get_train_loaders
 from pytorch3dunet.unet3d.losses import get_loss_criterion
 from pytorch3dunet.unet3d.metrics import get_evaluation_metric
 from pytorch3dunet.unet3d.model import get_model, UNet2D
-from pytorch3dunet.unet3d.utils import get_logger, get_tensorboard_formatter, create_optimizer, \
+from pytorch3dunet.unet3d.utils import get_logger, get_graph,get_tensorboard_formatter, create_optimizer, \
     create_lr_scheduler, get_number_of_learnable_parameters
 from . import utils
 
@@ -39,6 +39,9 @@ def create_trainer(config):
     # Create data loaders
     loaders = get_train_loaders(config)
 
+    # Get graph for GAT
+    node_data,edge_data = get_graph(config)
+    
     # Create the optimizer
     optimizer = create_optimizer(config['optimizer'], model)
 
@@ -54,7 +57,7 @@ def create_trainer(config):
 
     return UNetTrainer(model=model, optimizer=optimizer, lr_scheduler=lr_scheduler, loss_criterion=loss_criterion,
                        eval_criterion=eval_criterion, loaders=loaders, tensorboard_formatter=tensorboard_formatter,
-                       resume=resume, pre_trained=pre_trained, **trainer_config)
+                       resume=resume, pre_trained=pre_trained,edge=edge_data, node=node_data, **trainer_config)
 
 
 class UNetTrainer:
@@ -91,7 +94,7 @@ class UNetTrainer:
     def __init__(self, model, optimizer, lr_scheduler, loss_criterion, eval_criterion, loaders, checkpoint_dir,
                  max_num_epochs, max_num_iterations, validate_after_iters=200, log_after_iters=100, validate_iters=None,
                  num_iterations=1, num_epoch=0, eval_score_higher_is_better=True, tensorboard_formatter=None,
-                 skip_train_validation=False, resume=None, pre_trained=None, **kwargs):
+                 skip_train_validation=False, resume=None, pre_trained=None, edge=None, node=None,**kwargs):
 
         self.model = model
         self.optimizer = optimizer
@@ -106,6 +109,10 @@ class UNetTrainer:
         self.log_after_iters = log_after_iters
         self.validate_iters = validate_iters
         self.eval_score_higher_is_better = eval_score_higher_is_better
+
+        ### GAT 
+        self.edge=edge
+        self.node=node
 
         logger.info(model)
         logger.info(f'eval_score_higher_is_better: {eval_score_higher_is_better}')
@@ -149,23 +156,9 @@ class UNetTrainer:
 
     def fit(self):
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        nodes_file_path = os.path.join("../Data/Train/", f"nodes.pt")
-        edges_file_path = os.path.join("../Data/Train/", f"edges.pt")
-
-        nodes_data = torch.load(nodes_file_path)
-        edges_data = torch.load(edges_file_path)
-
-        print(nodes_data)
-        print(edges_data)
-
-        nodes_data = nodes_data.to(device)
-        edges_data = edges_data.to(device)
-
         for _ in range(self.num_epochs, self.max_num_epochs):
             # train for one epoch
-            should_terminate = self.train(nodes_data, edges_data)
+            should_terminate = self.train(self.node, self.edge)
 
             if should_terminate:
                 logger.info('Stopping criterion is satisfied. Finishing training')
