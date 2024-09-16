@@ -62,7 +62,7 @@ class AbstractUNet(nn.Module):
         gat_features = self.gat_module(graph_data, edge_index)
         scaled_gat_features = gat_features * 100
         gat_output_sum = torch.sum(scaled_gat_features, dim=0)
-        print(gat_output_sum)
+        #print(gat_output_sum)
         expanded_gat_output_mean = gat_output_sum.view(1, 256, 1, 1, 1).expand_as(x)
         #print("===========X")
         #print(x)

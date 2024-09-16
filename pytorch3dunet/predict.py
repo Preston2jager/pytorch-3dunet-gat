@@ -53,8 +53,6 @@ def main():
     # create predictor instance
     predictor = get_predictor(model, config)
     nodes_data, edges_data = get_graph(config)
-    print(nodes_data)
-    print(edges_data)
 
     for test_loader in get_test_loaders(config):
         # run the model prediction on the test_loader and save the results in the output_dir

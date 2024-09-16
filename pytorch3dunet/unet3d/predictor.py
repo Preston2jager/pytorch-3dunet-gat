@@ -125,8 +125,6 @@ class StandardPredictor(_AbstractPredictor):
                         prediction = torch.unsqueeze(prediction, dim=-3)
                     else:
                         # forward pass
-                        print(nodes_data)
-                        print(edges_data)
                         prediction = self.model(input,nodes_data,edges_data)
 
                     # unpad the predicted patch
