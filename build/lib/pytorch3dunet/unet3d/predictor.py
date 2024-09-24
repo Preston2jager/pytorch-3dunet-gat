@@ -13,7 +13,7 @@ from tqdm import tqdm
 from pytorch3dunet.datasets.hdf5 import AbstractHDF5Dataset
 from pytorch3dunet.datasets.utils import SliceBuilder, remove_padding
 from pytorch3dunet.unet3d.model import UNet2D
-from pytorch3dunet.unet3d.utils import get_logger, get_graph
+from pytorch3dunet.unet3d.utils import get_logger
 
 logger = get_logger('UNetPredictor')
 
@@ -82,7 +82,7 @@ class StandardPredictor(_AbstractPredictor):
         super().__init__(model, output_dir, out_channels, output_dataset, save_segmentation, prediction_channel,
                          **kwargs)
 
-    def __call__(self, test_loader,nodes_data,edges_data):
+    def __call__(self, test_loader):
         assert isinstance(test_loader.dataset, AbstractHDF5Dataset)
         logger.info(f"Processing '{test_loader.dataset.file_path}'...")
         start = time.perf_counter()
@@ -94,7 +94,21 @@ class StandardPredictor(_AbstractPredictor):
             # single channel prediction map
             prediction_maps_shape = (1,) + volume_shape
         else:
-            prediction_maps_shape = (self.out_channels,) + volume_shape     
+            prediction_maps_shape = (self.out_channels,) + volume_shape
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        nodes_file_path = os.path.join("./Data/Pre_2/", f"nodes.pt")
+        edges_file_path = os.path.join("./Data/Pre_2/", f"edges.pt")
+
+        nodes_data = torch.load(nodes_file_path)
+        edges_data = torch.load(edges_file_path)
+
+        print(nodes_data)
+        print(edges_data)
+
+        nodes_data = nodes_data.to(device)
+        edges_data = edges_data.to(device)
 
         # create destination H5 file
         output_file = _get_output_file(dataset=test_loader.dataset, output_dir=self.output_dir)

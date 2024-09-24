@@ -366,11 +366,10 @@ def get_class(class_name, modules):
     raise RuntimeError(f'Unsupported dataset class: {class_name}')
 
 def get_graph(config):
-    file_paths = []
-    if 'train' in config['loaders'] and 'file_paths' in config['loaders']['train']:
+    try:
         file_paths = config['loaders']['train']['file_paths']
-    elif 'test' in config['loaders'] and 'file_paths' in config['loaders']['test']:
-        file_paths = config['loaders']['test']['file_paths']
+    except KeyError:
+        file_paths = []
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if file_paths:
         # 构建 nodes 和 edges 的文件路径

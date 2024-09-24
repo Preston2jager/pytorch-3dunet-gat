@@ -25,8 +25,6 @@ class AbstractUNet(nn.Module):
         self.encoders = create_encoders(in_channels, f_maps, basic_module, conv_kernel_size,
                                         conv_padding, conv_upscale, dropout_prob,
                                         layer_order, num_groups, pool_kernel_size, is3d)
-        
-        self.gat_module = GAT(gat_in_features, gat_out_features, gat_layers, gat_heads_per_layer)
 
         self.decoders = create_decoders(f_maps, basic_module, conv_kernel_size, conv_padding,
                                         layer_order, num_groups, upsample, dropout_prob,
@@ -46,6 +44,9 @@ class AbstractUNet(nn.Module):
             self.final_activation = None
 
         
+        self.gat_module = GAT(gat_in_features, gat_out_features, gat_layers, gat_heads_per_layer)
+
+        
 
     def forward(self, x, graph_data, edge_index):
 
@@ -60,14 +61,12 @@ class AbstractUNet(nn.Module):
         #GAT integration
 
         gat_features = self.gat_module(graph_data, edge_index)
-        scaled_gat_features = gat_features * 100
+        scaled_gat_features = gat_features * 10000
         gat_output_sum = torch.sum(scaled_gat_features, dim=0)
-        #print(gat_output_sum)
         expanded_gat_output_mean = gat_output_sum.view(1, 256, 1, 1, 1).expand_as(x)
-        #print("===========X")
-        #print(x)
-        #print("===========GAT")
-        #print(expanded_gat_output_mean)
+
+        print(x)
+        print(expanded_gat_output_mean)
         
         x = x + expanded_gat_output_mean  # Element-wise addition of features
 

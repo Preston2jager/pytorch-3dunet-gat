@@ -47,7 +47,6 @@ networkx==3.3
 numpy==1.26.4
 opencv-python==4.9.0.80
 osqp==0.6.7
-packaging @ file:///C:/b/abs_cc1h2xfosn/croot/packaging_1710807447479/work
 pandas==2.2.2
 pillow==10.3.0
 ply==3.11
@@ -63,7 +62,6 @@ pyparsing==3.1.2
 PyQt5==5.15.9
 pyqt5-plugins==5.15.9.2.3
 PyQt5-Qt5==5.15.2
-PyQt5-sip @ file:///C:/b/abs_c0pi2mimq3/croot/pyqt-split_1698769125270/work/pyqt_sip
 pyqt5-tools==5.15.9.3.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
@@ -83,7 +81,6 @@ scikit-learn==1.5.0
 scipy==1.13.0
 scs==3.2.4.post2
 seaborn==0.13.2
-sip @ file:///C:/b/abs_edevan3fce/croot/sip_1698675983372/work
 six==1.16.0
 smmap==5.0.1
 streamlit==1.36.0
