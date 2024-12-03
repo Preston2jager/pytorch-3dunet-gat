@@ -35,7 +35,7 @@ def single_page_app():
             st.write(Evas)
 
         if st.button('Render'):
-            subprocess.run(['python', './Data_Render.py', '--file', Data_meta_instance.Points_Dir], check=True)
+            subprocess.run(['python', '../Dev_Toolbox/4_data_Render_input.py', '--file', Data_meta_instance.Points_Dir], check=True)
 
         if st.button('Save as H5 file'):
             clear_folders()
